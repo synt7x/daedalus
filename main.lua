@@ -18,7 +18,7 @@ local ServerScriptService = game:GetService('ServerScriptService')
 
 <include "src/library.lua">
 
-function Main(Model, Options)
+local function Main(Model, Options)
     -- Pass parameters to global scope
     OPTIONS = Options or {}
     MODEL = validate(Model, 'Model')
