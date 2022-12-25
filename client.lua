@@ -15,15 +15,15 @@ end
 
 -- Start listening for messages
 daedalus.OnClientEvent:Connect(function(...)
-    local arguments = { ... }
-    local type = arguments[1]
-    table.remove(arguments, 1)
+    local Arguments = { ... }
+    local Type = Arguments[1]
+    table.remove(Arguments, 1)
 
-    if type == "error" then
-        error(table.concat(arguments, " "))
-    elseif type == "warn" then
-        warn(table.concat(arguments, " "))
-    elseif type == "print" then
-        print(table.concat(arguments, " "))
+    if Type == "error" then
+        error(table.concat(Arguments, " "))
+    elseif Type == "warn" then
+        warn(table.concat(Arguments, " "))
+    elseif Type == "print" then
+        print(table.concat(Arguments, " "))
     end
 end)

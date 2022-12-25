@@ -1,5 +1,5 @@
 -- Midnight Horrors Round API
-local Round = {
+Library.Round = {
     props = {},
 
     -- Helper Folders
@@ -10,20 +10,20 @@ local Round = {
 }
 
 -- Round properties
-Round.props.type = ReplicatedStorage:WaitForChild('curroundtype')
-Round.props.disaster = ServerScriptService:WaitForChild('DisasterScript')
-Round.props.time = Round.props.disaster:WaitForChild('props'):WaitForChild('RoundTime')
+Library.Round.props.type = ReplicatedStorage:WaitForChild('curroundtype')
+Library.Round.props.disaster = ServerScriptService:WaitForChild('DisasterScript')
+Library.Round.props.time = Library.Round.props.disaster:WaitForChild('props'):WaitForChild('RoundTime')
 
 
 -- Check if the round is active, this is called in all helper functions
-function Round:IsActive()
-    return Round.props.type ~= 0
+function Library.Round:IsActive()
+    return self.props.type ~= 0
 end
 
 -- Force the current round to end
-function Round:End()
+function Library.Round:End()
     -- Make sure that there is a round to end
-    if not Round:IsActive() then
+    if not self:IsActive() then
         warn("Tried to force the round to end, but the round is already over!")
         return
     end
@@ -32,21 +32,21 @@ function Round:End()
 end
 
 -- Set the round timer
-function Round:SetTimer(Time)
+function Library.Round:SetTimer(Time)
     -- Make sure that there is a round to set the timer for
-    if not Round:IsActive() then
+    if not self:IsActive() then
         warn("Tried to set the round timer, but the round is over!")
         return
     end
 
     -- Set the round timer
-    Round.props.time.Changed:Wait()
-    Round.props.time.Value = Time
+    self.props.time.Changed:Wait()
+    self.props.time.Value = Time
 end
 
-function Round:GetTimer()
+function Library.Round:GetTimer()
     -- Make sure that there is a round to get the timer for
-    if not Round:IsActive() then
+    if not self:IsActive() then
         warn("Tried to get the round timer, but the round is over!")
         return 0
     end
@@ -56,8 +56,8 @@ end
 
 
 -- Get the current round type
-function Round:GetType()
-    local RoundType = Round.props.type.Value
+function Library.Round:GetType()
+    local RoundType = self.props.type.Value
 
     -- Return the round name and number
     if RoundType == 1 then
@@ -82,9 +82,9 @@ function Round:GetType()
 end
 
 -- Force the current round type to change, useful for moviestar and earthquake rounds
-function Round:ForceType(RoundNumber)
+function Library.Round:ForceType(RoundNumber)
     -- Make sure that there is a round to change the type for
-    if not Round:IsActive() then
+    if not self:IsActive() then
         warn("Tried to force the round type, but the round is over!")
         return
     end
@@ -96,7 +96,7 @@ function Round:ForceType(RoundNumber)
     end
 
     -- Force the round type
-    Round.props.type.Value = RoundNumber
+    self.props.type.Value = RoundNumber
 end
 
 -- Get the current map

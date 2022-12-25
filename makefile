@@ -4,7 +4,7 @@ release/daedalus.lua:
 release/client.lua:
 	copy client.lua release\client.lua
 
-PHONY: clean build
+PHONY: clean build publish
 
 clean:
 	del release\daedalus.lua
