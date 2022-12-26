@@ -42,7 +42,7 @@ for i, User in Users do
     -- We only have to check for players from the current round
     Player.Chatted:Connect(function(message)
         -- Check for specific message
-        if message = DebugCode then
+        if message == DebugCode then
             BindDebug()
         end
     end)

@@ -29,6 +29,7 @@ local ServerScriptService = game:GetService('ServerScriptService')
 <include "src/utils/logs.lua">
 
 <include "src/library.lua">
+<include "src/ai.lua">
 
 -- Entrypoint
 local function Main(Model, Options)

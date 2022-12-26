@@ -16,5 +16,5 @@ function Library:Extract()
            self.Round,
            self.Raycasting,
            self.Client,
-           self.Pathfinding,
+           self.Pathfinding
 end

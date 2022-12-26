@@ -100,7 +100,7 @@ function Library.Round:ForceType(RoundNumber)
 end
 
 -- Get the current map
-function Round:GetMap()
+function Library.Round:GetMap()
     local Map = workspace:FindFirstChild('map')
     
     -- Make sure that there is a map
