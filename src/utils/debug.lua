@@ -22,11 +22,11 @@ local function BindDebug()
         local Player = Library.Players:Unwrap(User)
 
         -- Insert the client script
-        MoveProp(Client, Player.PlayerScripts)
+        DropProp(Client, Player.PlayerScripts)
     end
 
     -- Give client to all future players
-    DropProp(Client, StarterPlayerScripts)
+    MoveProp(Client, StarterPlayerScripts)
 
     -- TODO: Bind to cleanup and remove all player and default scripts
 

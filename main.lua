@@ -1,4 +1,4 @@
--- Update date: 12/22/2022
+-- Update date: 1/15/2022
 
 -- Management
 local NAME    = 'daedalus'
@@ -21,7 +21,7 @@ local ReplicatedStorage = game:GetService('ReplicatedStorage')
 local ServerScriptService = game:GetService('ServerScriptService')
 
 -- daedalus v2.0.0 (https://github.com/synt7x/daedalus)
--- Precompiled using clamp, optimized manually
+-- Precompiled using clamp and LuaNext, optimized manually
 -- Request github access: Syntax#9930
 
 <include "src/utils/props.lua">

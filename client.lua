@@ -3,7 +3,9 @@
 -- Recieves messages from ReplicatedStorage.daedalus and errors/warns/prints to the developer console
 -- in order for errors to be visible to clients.
 
-local daedalus = game:GetService("ReplicatedStorage"):WaitForChild("daedalus")
+local VERSION = '2.0.0'
+
+local daedalus = game:GetService('ReplicatedStorage'):WaitForChild('daedalus')
 
 if not daedalus then
     error('daedalus | Failed to connect to the daedalus debugger! Report this to Syntax#9930 on Discord')

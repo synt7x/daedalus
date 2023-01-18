@@ -13,7 +13,7 @@ function AI.new()
     -- Create values
     self.Model = MODEL
     self.Name = self.Model.Name
-    self.Humanoid = self.Model:FindFirstChildOfClass("Humanoid")
+    self.Humanoid = self.Model:FindFirstChildOfClass('Humanoid')
     self.Events = {}
 
     self:CreateEvent('Initialize')
@@ -24,6 +24,33 @@ function AI.new()
     -- Initialize AI
     self.Initialize:Fire(Model, Humanoid)
 
+    -- Initialize asynchronous, blocking loop
+    coroutine.wrap(function()
+        while wait() do
+            -- Fetch all targets
+            local Targets = Library.Players:GetTargets()
+
+            -- Fire the 'Tick' event, and pass targets
+            self.Tick:Fire(Targets)
+        end
+    end)()
+
+    -- Cleanup on death
+    if self.Humanoid then
+        self.Humanoid.Died:Connect(function()
+            self.Cleanup:Fire()
+            script.Disabled = true
+        end)
+    end
+
+    -- Cleanup on deletion
+    self.Model.AncestryChanged:Connect(function()
+        if not self.Model:IsDescendantOf(game) then
+            self.Cleanup:Fire()
+            script.Disabled = true
+        end
+    end)
+
 	return self
 end
 
@@ -31,7 +58,7 @@ end
 function AI:CreateEvent(Event)
     -- Don't overwrite existing values
     if self.Events[Event] or self[Event] then
-        error("Event '" .. Event .. "' already exists!")
+        error('Event \'' .. Event .. '\' already exists!')
     else
 
         -- Create event
@@ -54,4 +81,15 @@ function AI:CreateEvent(Event)
 
     -- Let the user fire the event after it's creation
     return self[Event]
+end
+
+-- Bind to the main event loop
+function AI:Bind(Callback)
+    -- Check that the 'Tick' event exists
+    if not self.Events.Tick then
+        error('AI:Bind() must be called after AI:CreateEvent(\'Tick\')!')
+    else
+        -- Connect to the 'Tick' event
+        self.Events.Tick.Connect(Callback)
+    end
 end

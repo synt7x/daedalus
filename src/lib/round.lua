@@ -2,6 +2,16 @@
 Library.Round = {
     props = {},
 
+    Classic = 1,
+    Blackout = 2,
+    DoubleTrouble = 3,
+    Bloodbath = 4,
+    Foggy = 5,
+    Clones = 6,
+    Ghost = 7,
+    Moviestar = 8,
+    Earthquake = 9,
+
     -- Helper Folders
     Bots = workspace:WaitForChild('bots'),
     Killers = workspace:WaitForChild('KillerStorage'),
@@ -24,10 +34,11 @@ end
 function Library.Round:End()
     -- Make sure that there is a round to end
     if not self:IsActive() then
-        warn("Tried to force the round to end, but the round is already over!")
+        warn('Tried to force the round to end, but the round is already over!')
         return
     end
 
+    -- https://discord.com/channels/444518752764297229/938951965730283581/1056063110953316453
     Round:SetTimer(0)
 end
 
@@ -35,7 +46,7 @@ end
 function Library.Round:SetTimer(Time)
     -- Make sure that there is a round to set the timer for
     if not self:IsActive() then
-        warn("Tried to set the round timer, but the round is over!")
+        warn('Tried to set the round timer, but the round is over!')
         return
     end
 
@@ -47,7 +58,7 @@ end
 function Library.Round:GetTimer()
     -- Make sure that there is a round to get the timer for
     if not self:IsActive() then
-        warn("Tried to get the round timer, but the round is over!")
+        warn('Tried to get the round timer, but the round is over!')
         return 0
     end
 
@@ -61,23 +72,23 @@ function Library.Round:GetType()
 
     -- Return the round name and number
     if RoundType == 1 then
-        return "Classic", RoundType
+        return 'Classic', RoundType
     elseif RoundType == 2 then
-        return "Blackout", RoundType
+        return 'Blackout', RoundType
     elseif RoundType == 3 then
-        return "Double Trouble", RoundType
+        return 'Double Trouble', RoundType
     elseif RoundType == 4 then
-        return "Bloodbath", RoundType
+        return 'Bloodbath', RoundType
     elseif RoundType == 5 then
-        return "Foggy", RoundType
+        return 'Foggy', RoundType
     elseif RoundType == 6 then
-        return "Clones", RoundType
+        return 'Clones', RoundType
     elseif RoundType == 7 then
-        return "Ghost", RoundType
+        return 'Ghost', RoundType
     elseif RoundType == 8 then
-        return "Moviestar", RoundType
+        return 'Moviestar', RoundType
     elseif RoundType == 9 then
-        return "Earthquake", RoundType
+        return 'Earthquake', RoundType
     end
 end
 
@@ -85,13 +96,13 @@ end
 function Library.Round:ForceType(RoundNumber)
     -- Make sure that there is a round to change the type for
     if not self:IsActive() then
-        warn("Tried to force the round type, but the round is over!")
+        warn('Tried to force the round type, but the round is over!')
         return
     end
 
     -- Make sure that the round number is valid
     if RoundNumber < 1 or RoundNumber > 9 then
-        warn("Tried to force the round type, but the round number is invalid!")
+        warn('Tried to force the round type, but the round number is invalid!')
         return
     end
 
