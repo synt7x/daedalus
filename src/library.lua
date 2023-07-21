@@ -15,6 +15,11 @@ function Library:Extract()
            self.Hitbox,
            self.Round,
            self.Raycasting,
-           self.Client,
-           self.Pathfinding
+           self.Pathfinding,
+           self.Client
 end
+
+-- Import the library
+<include "src/lib/player.lua">
+<include "src/lib/players.lua">
+<include "src/lib/round.lua">

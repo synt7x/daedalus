@@ -38,8 +38,7 @@ function Library.Round:End()
         return
     end
 
-    -- https://discord.com/channels/444518752764297229/938951965730283581/1056063110953316453
-    Round:SetTimer(0)
+    self:SetTimer(0)
 end
 
 -- Set the round timer
@@ -62,7 +61,7 @@ function Library.Round:GetTimer()
         return 0
     end
 
-    return Round.props.time.Value
+    return self.props.time.Value
 end
 
 

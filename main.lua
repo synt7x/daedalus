@@ -1,4 +1,8 @@
--- Update date: 1/15/2022
+'strict'
+
+-- Version 2.0.0-INDEV-NONWORKING
+-- Update date: 7/20/2023
+-- Author(s): Syntax#9930
 
 -- Management
 local NAME    = 'daedalus'

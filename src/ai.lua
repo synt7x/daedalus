@@ -25,15 +25,16 @@ function AI.new()
     self.Initialize:Fire(Model, Humanoid)
 
     -- Initialize asynchronous, blocking loop
-    coroutine.wrap(function()
-        while wait() do
+    task.spawn(function()
+        while self.Model do
             -- Fetch all targets
             local Targets = Library.Players:GetTargets()
 
             -- Fire the 'Tick' event, and pass targets
             self.Tick:Fire(Targets)
+            task.wait()
         end
-    end)()
+    end)
 
     -- Cleanup on death
     if self.Humanoid then
@@ -58,7 +59,7 @@ end
 function AI:CreateEvent(Event)
     -- Don't overwrite existing values
     if self.Events[Event] or self[Event] then
-        error('Event \'' .. Event .. '\' already exists!')
+        error('Event "' .. Event .. '" already exists!')
     else
 
         -- Create event
