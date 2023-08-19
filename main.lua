@@ -1,6 +1,4 @@
-'strict'
-
--- Version 2.0.0-INDEV-NONWORKING
+-- Version 2.0.0-INDEV-0.0.0
 -- Update date: 7/20/2023
 -- Author(s): Syntax#9930
 
@@ -19,6 +17,7 @@ local MODEL   = nil
 -- Services
 local Players = game:GetService('Players')
 local StarterPlayer = game:GetService('StarterPlayer')
+local StarterGui = game:GetService('StarterGui')
 local StarterPlayerScripts = StarterPlayer.StarterPlayerScripts
 local StarterCharacterScripts = StarterPlayer.StarterCharacterScripts
 local ReplicatedStorage = game:GetService('ReplicatedStorage')
@@ -28,12 +27,26 @@ local ServerScriptService = game:GetService('ServerScriptService')
 -- Precompiled using clamp and LuaNext, optimized manually
 -- Request github access: Syntax#9930
 
+local Remote = ReplicatedStorage:FindFirstChild('daedalus')
+
+-- Initialize Classes
+local AI = {}
+local Library = {
+    Raycasting = {},
+    Pathfinding = {},
+    Players = {},
+    Round = {},
+    Client = {},
+    Hitbox = {},
+}
+
 <include "src/utils/props.lua">
-<include "src/utils/debug.lua">
 <include "src/utils/logs.lua">
 
 <include "src/library.lua">
 <include "src/ai.lua">
+
+<include "src/utils/debug.lua">
 
 -- Entrypoint
 local function Main(Model, Options)
@@ -49,6 +62,11 @@ local function Main(Model, Options)
         Assets = Assets.new(),
         Library = Library,
     }
+
+    -- Hide from workspace
+    if script:IsDescendantOf(workspace) then
+        script:Destroy()
+    end
 
     -- Provide access to classes and library
     return PROPS.AI, PROPS.Assets, PROPS.Library

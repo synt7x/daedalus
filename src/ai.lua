@@ -1,14 +1,11 @@
--- Initialize AI class
-local AI = {}
-
 -- AI class constructor
 function AI.new()
     -- Copy all values to create a new instance of the class
 	local self = {}
 
-	for name, value in AI do
-		self[name] = value
-	end
+    for Key, Value in pairs(AI) do
+        self[Key] = Value
+    end
 
     -- Create values
     self.Model = MODEL
@@ -22,13 +19,19 @@ function AI.new()
     self:CreateEvent('Ended')
 
     -- Initialize AI
-    self.Initialize:Fire(Model, Humanoid)
+    self.Initialize:Fire(self.Model, self.Humanoid)
+
+    for i, Module in Library do
+		if type(Module) == 'table' and Module.Initialize then
+			Module:Initialize(self.Model, self.Humanoid)
+		end
+	end
 
     -- Initialize asynchronous, blocking loop
     task.spawn(function()
         while self.Model do
             -- Fetch all targets
-            local Targets = Library.Players:GetTargets()
+            local Targets = Library.Players.Targets
 
             -- Fire the 'Tick' event, and pass targets
             self.Tick:Fire(Targets)
@@ -56,25 +59,24 @@ function AI.new()
 end
 
 -- Create an event
-function AI:CreateEvent(Event)
+function AI:CreateEvent(Event: string)
     -- Don't overwrite existing values
     if self.Events[Event] or self[Event] then
         error('Event "' .. Event .. '" already exists!')
     else
-
         -- Create event
         self.Events[Event] = {
-            Callbacks = {},
-            Connect = function(Callback)
-                table.insert(self.Events[Event].Callbacks, Callback)
-            end,
-            Fire = function(...)
-                for i, Callback in self.Events[Event].Callbacks do
-                    -- Call the callback with the arguments
-                    Callback(...)
-                end
-            end
-        }
+			Callbacks = {},
+			Connect = function(Event, Callback)
+				table.insert(Event.Callbacks, Callback)
+			end,
+			Fire = function(Event, ...)
+				for i, Callback in Event.Callbacks do
+					-- Call the callback with the arguments
+					Callback(...)
+				end
+			end
+		}
 
         -- Allow it to be called on the class
         self[Event] = self.Events[Event]
@@ -91,6 +93,19 @@ function AI:Bind(Callback)
         error('AI:Bind() must be called after AI:CreateEvent(\'Tick\')!')
     else
         -- Connect to the 'Tick' event
-        self.Events.Tick.Connect(Callback)
+        self.Events.Tick:Connect(Callback)
+    end
+end
+
+-- Allow monkey-patching using modules
+function AI:Patch(Module)
+    -- Check that the module is a table
+    if type(Module) ~= 'table' then
+        error('AI:Patch() must be called with a table!')
+    else
+        -- Copy all values from the module
+        for Key, Value in Module do
+            self[Key] = Value
+        end
     end
 end

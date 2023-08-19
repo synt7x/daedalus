@@ -1,6 +1,5 @@
 Library.Players = {
-    Targets = {}
-
+    Targets = {},
     Bots = workspace:FindFirstChild('bots')
 }
 
@@ -13,7 +12,29 @@ function Library.Players:GetTargets()
     return self.Targets
 end
 
-AI.Initialize:Connect(function()
+function Library.Players:GetPlayers()
+    local List = {}
+
+    for i, Player in Players:GetPlayers() do
+        local Character = Player.Character
+        if Player.Character then
+            table.insert(
+                List,
+                Library.Player.new(Player.Character)
+            )
+        end
+    end
+
+    return List
+end
+
+function Library.Players:Unwrap(User)
+    if User.Humanoid then
+        return User.Player
+    end
+end
+
+function Library.Players:Initialize()
     Players.PlayerAdded:Connect(function(Player)
         Player.CharacterAdded:Connect(function(Character)
             local HumanoidRootPart = Character:WaitForChild('HumanoidRootPart')
@@ -38,16 +59,37 @@ AI.Initialize:Connect(function()
             self:RegisterCharacter(Character)
         end)
 
-        Player.CharacterRemoved:Connect(function(Character)
+        Player.CharacterRemoving:Connect(function(Character)
             self.Targets[Character] = nil
         end)
     end)
 
-    Bots.ChildAdded:Connect(function(Bot)
-        self.Targets[Bot] = self:RegisterCharacter(Character)
+    if not self.Bots then return end
+
+    self.Bots.ChildAdded:Connect(function(Bot)
+        local HumanoidRootPart = Bot:WaitForChild('HumanoidRootPart')
+        local Humanoid = Bot:FindFirstChildOfClass('Humanoid')
+
+        HumanoidRootPart = Validate(HumanoidRootPart, 'Part')
+            
+        if Humanoid then
+            Humanoid.Died:Connect(function()
+                self.Targets[Bot] = nil
+            end)
+
+            Humanoid.HealthChanged:Connect(function(Health)
+                if Health <= 0 then
+                    self.Targets[Bot] = nil
+                else
+                    self:RegisterCharacter(Bot)
+                end
+            end)
+        end
+
+       self:RegisterCharacter(Bot)
     end)
 
-    Bots.ChildRemoved:Connect(function(Bot)
+    self.Bots.ChildRemoved:Connect(function(Bot)
         self.Targets[Bot] = nil
     end)
-end)
+end

@@ -21,6 +21,12 @@ local function CreateReplicatedProp(Type, Name)
     return CreateProp(Type, Name, ReplicatedStorage)
 end
 
+local function MoveProp(Prop, Parent)
+    -- Move the prop to the given parent
+    Prop.Parent = Parent
+    return Prop
+end
+
 local function DropProp(Prop, Parent)
     -- Create a clone of the current prop
     local Clone = Prop:Clone()
@@ -28,12 +34,6 @@ local function DropProp(Prop, Parent)
 
     -- Return the clone
     return Clone
-end
-
-local function MoveProp(Prop, Parent)
-    -- Move the prop to the given parent
-    Prop.Parent = Parent
-    return Prop
 end
 
 local function HideProp(Prop)
