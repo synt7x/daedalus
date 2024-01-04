@@ -14,3 +14,4 @@ end
 <include "src/lib/player.lua">
 <include "src/lib/players.lua">
 <include "src/lib/round.lua">
+<include "src/lib/animate.lua">

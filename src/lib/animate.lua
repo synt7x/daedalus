@@ -1,4 +1,6 @@
-Library.Animate = {}
+Library.Animate = {
+    PollingRate = 0.1
+}
 
 function Library.Animate:LoadAnimations(Animations)
     -- Check for humanoid
@@ -9,6 +11,19 @@ function Library.Animate:LoadAnimations(Animations)
     -- Get an animator
     local Animator = AI.Humanoid:FindFirstChildOfClass('Animator') or AI.Humanoid
     self.Animations = {}
+    self.Pose = 'Idle'
+
+    AI.Humanoid.Running:Connect(function(Speed)
+        if Speed <= 0.01 then
+            self.Pose = 'Idle'
+        else
+            self.Pose = 'Running'
+        end
+    end)
+
+    AI.Humanoid.FreeFalling:Connect(function()
+        self.Pose = 'Falling'
+    end)
 
     -- Load all animations
     for Name, ID in Animations do
@@ -23,6 +38,30 @@ function Library.Animate:LoadAnimations(Animations)
     return table.unpack(self.Animations)
 end
 
+-- Playing animation synchronously
+function Library.Animate:Play(Track)
+    -- Don't play the same animation
+    if not Track.IsPlaying then
+        return self:ForcePlay(Track)
+    end
+
+    return self.PlayingAnimation
+end
+
+-- Playing animation asynchronously
+function Library.Animate:ForcePlay(Track)
+    -- Stop playing animation
+    if self.PlayingAnimation and self.PlayingAnimation.IsPlaying then
+        self.PlayingAnimation:Stop()
+    end
+
+    -- Load new animation
+    self.PlayingAnimation = Track
+    Track:Play()
+
+    return Track
+end
+
 -- Loading Animation functions
 function Library.Animate:Use(Callback)
     -- Create a thread
@@ -32,7 +71,9 @@ function Library.Animate:Use(Callback)
 
     -- Stop the thread once the round ends
     AI.Cleanup:Connect(function()
-        task.cancel(Thread)
+        if Thread then
+            task.cancel(Thread)
+        end
     end)
 
     return Thread
@@ -42,9 +83,7 @@ end
 function Library.Animate:Single(Animations, AI)
     -- Play all animations
     for i, Animation in Animations do
-        if not Animation.IsPlaying then
-            Animation:Play()
-        end
+        self:Play(Animation)
     end
 end
 
@@ -53,17 +92,30 @@ function Library.Animate:Chaser(Animations, AI)
     local Idle = Animations.Idle
     local Walk = Animations.Walk or Animations.Run
 
-
+    while task.wait(self.PollingRate) do
+        if self.Pose == 'Idle' then
+            self:Play(Idle)
+        else
+            self:Play(Walk)
+        end
+    end
 end
 
 function Library.Animate.Runner(Threshold)
-    -- Prefetch animations
-    local Idle = Animations.Idle
-    local Walk = Animations.Walk
-    local Run = Animations.Run
-
     -- Return closure with the given threshold
     return function(self, Animations, AI)
+        local Idle = Animations.Idle
+        local Walk = Animations.Walk
+        local Run = Animations.Run
 
+        while task.wait(self.PollingRate) do
+            if self.Pose == 'Idle' then
+                self:Play(Idle)
+            elseif AI.Humanoid.WalkSpeed >= Threshold then
+                self:Play(Run)
+            else
+                self:Play(Walk)
+            end
+        end
     end
 end

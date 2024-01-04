@@ -1,7 +1,7 @@
 -- Midnight Horrors Round API
 if workspace:FindFirstChild('bots') then
     Library.Round = {
-        props = {},
+        Props = {},
 
         Classic = 1,
         Blackout = 2,

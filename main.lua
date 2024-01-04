@@ -1,6 +1,6 @@
 -- Version 2.0.0-INDEV-0.0.0
 -- Update date: 1/4/2024
--- Author(s): Syntax#9930
+-- Author(s): synt7x
 
 -- Management
 local NAME    = 'daedalus'
@@ -25,7 +25,7 @@ local ServerScriptService = game:GetService('ServerScriptService')
 
 -- daedalus v2.0.0 (https://github.com/synt7x/daedalus)
 -- Precompiled using clamp and LuaNext, optimized manually
--- Request github access: Syntax#9930
+-- Request github access: synt7x
 
 local Remote = ReplicatedStorage:FindFirstChild('daedalus')
 
@@ -60,6 +60,9 @@ local function Main(Model, Options)
         Assets = Assets.new(),
         Library = Library,
     }
+
+    -- Propagate new class
+    AI = PROPS.AI
 
     -- Hide from workspace
     if script:IsDescendantOf(workspace) then
