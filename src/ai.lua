@@ -49,7 +49,7 @@ function AI.new()
 
     -- Cleanup on deletion
     self.Model.AncestryChanged:Connect(function()
-        if not self.Model:IsDescendantOf(game) then
+        if not self.Model:IsDescendantOf(workspace) then
             self.Cleanup:Fire()
             script.Disabled = true
         end

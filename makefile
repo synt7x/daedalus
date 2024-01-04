@@ -1,13 +1,9 @@
 release/daedalus.lua:
-	clamp main.lua -o release/daedalus.lua
-
-release/client.lua:
-	copy client.lua release\client.lua
+	bin/clamp main.lua -o release/daedalus.lua
 
 PHONY: clean build publish
 
 clean:
 	del release\daedalus.lua
-	del release\client.lua
 
-build: clean release/daedalus.lua release/client.lua
+build: clean release/daedalus.lua

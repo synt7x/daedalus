@@ -43,7 +43,7 @@ function Library.Player:TakeDamage(Amount, ForcefieldPercentage)
 
             return Amount
         end
-    elseif Amount >= 100 then
+    elseif Amount >= self.Humanoid.MaxHealth then
         self:Kill()
         return Amount
     end

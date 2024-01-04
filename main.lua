@@ -1,5 +1,5 @@
 -- Version 2.0.0-INDEV-0.0.0
--- Update date: 7/20/2023
+-- Update date: 1/4/2024
 -- Author(s): Syntax#9930
 
 -- Management
@@ -45,8 +45,6 @@ local Library = {
 
 <include "src/library.lua">
 <include "src/ai.lua">
-
-<include "src/utils/debug.lua">
 
 -- Entrypoint
 local function Main(Model, Options)
