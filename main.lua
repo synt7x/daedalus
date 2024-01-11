@@ -13,6 +13,7 @@ local PROPS   = {}
 
 -- References
 local MODEL   = nil
+local ROOT    = nil
 
 -- Services
 local Players = game:GetService('Players')
@@ -43,14 +44,16 @@ local Library = {
 <include "src/utils/props.lua">
 <include "src/utils/logs.lua">
 
+<include "src/assets.lua">
 <include "src/library.lua">
 <include "src/ai.lua">
 
 -- Entrypoint
-local function Main(Model, Options)
+local function Main(Model, Root, Options)
     -- Pass parameters to global scope
     OPTIONS = Options or {}
     MODEL = Validate(Model, 'Model')
+    ROOT = Root or script.Parent
 
     if not MODEL then return end
 

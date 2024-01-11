@@ -12,6 +12,42 @@ function Library.Players:GetTargets()
     return self.Targets
 end
 
+function Library.Players:IsTarget(Model)
+    local Targets = self.Targets
+
+    for i, Target in Targets do
+        if not Target:IsAlive() then continue end
+        if Target.Character == Model then
+            return Target
+        end
+    end
+
+    return false
+end
+
+function Library.Players:GetTarget(Model)
+    return self:IsTarget(Model) or nil
+end
+
+function Library.Players:GetNearestTo(Position)
+    local Distance = math.huge
+    local Nearest = nil
+
+    for i, Target in Targets do
+        if not Target:IsAlive() then continue end
+
+        local TargetPosition = Target.HumanoidRootPart
+        local TargetDistance = (Position - TargetPosition).Magnitude
+
+        if TargetDistance < Distance then
+            Distance = TargetDistance
+            Nearest = Target
+        end
+    end
+
+    return Nearest, Distance
+end
+
 function Library.Players:GetPlayers()
     local List = {}
 
