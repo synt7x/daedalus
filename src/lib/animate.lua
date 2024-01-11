@@ -87,7 +87,7 @@ function Library.Animate:Single(Animations, AI)
     end
 end
 
-function Library.Animate:Chaser(Animations, AI)
+function Library.Animate:Chase(Animations, AI)
     -- Prefetch animations
     local Idle = Animations.Idle
     local Walk = Animations.Walk or Animations.Run
@@ -101,7 +101,7 @@ function Library.Animate:Chaser(Animations, AI)
     end
 end
 
-function Library.Animate.Runner(Threshold)
+function Library.Animate.Run(Threshold)
     -- Return closure with the given threshold
     return function(self, Animations, AI)
         local Idle = Animations.Idle
