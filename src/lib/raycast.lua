@@ -7,19 +7,19 @@ Library.Raycasting.Parameters.Transparent = RaycastParams.new()
 
 function Library.Raycasting:GetParameters(Character, Map)
     self.Parameters.Default.FilterDescendantsInstances = { Character }
-    self.Parameters.Default.FilterType = Enum.RaycastFilterType.Blacklist
+    self.Parameters.Default.FilterType = Enum.RaycastFilterType.Exclude
     
     if Map then
         local Blacklist = { Character }
 
-        for i, Child in Map:GetDescendants do
+        for i, Child in Map:GetDescendants() do
             if Child:IsA('BasePart') and Child.Transparency >= .1 or not Child.CanCollide then
                 table.insert(Blacklist, Child)
             end
         end
 
         self.Parameters.Transparent.FilterDescendantsInstances = Blacklist
-        self.Parameters.Transparent.FilterType = Enum.RaycastFilterType.blacklist
+        self.Parameters.Transparent.FilterType = Enum.RaycastFilterType.Exclude
     end
 
     return self.Parameters
@@ -58,9 +58,9 @@ end
 
 function Library.Raycasting:HitScan(Origin, Direction, Scalar, Parameters)
     local Part, Position, Normal = self:Raycast(Origin, Direction, Scalar, Parameters)
-    if not Result then return end
+    if not Part then return end
 
-    local Model = Result:FindFirstAncestorOfClass('Model')
+    local Model = Part:FindFirstAncestorOfClass('Model')
     if Model and Library.Players:GetTarget(Model) then
         return Part, Position, Normal
     end
@@ -68,7 +68,7 @@ end
 
 function Library.Raycasting:PierceScan(Origin, Direction, Scalar, Parameters)
     local Hits = {}
-    local Part = nil
+    local Part, Position, Normal
 
     repeat
         Part, Position, Normal = self:HitScan(Origin, Direction, Scalar, Parameters)

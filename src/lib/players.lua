@@ -13,9 +13,7 @@ function Library.Players:GetTargets()
 end
 
 function Library.Players:IsTarget(Model)
-    local Targets = self.Targets
-
-    for i, Target in Targets do
+    for i, Target in self.Targets do
         if not Target:IsAlive() then continue end
         if Target.Character == Model then
             return Target
@@ -33,7 +31,7 @@ function Library.Players:GetNearestTo(Position)
     local Distance = math.huge
     local Nearest = nil
 
-    for i, Target in Targets do
+    for i, Target in self.Targets do
         if not Target:IsAlive() then continue end
 
         local TargetPosition = Target.HumanoidRootPart
