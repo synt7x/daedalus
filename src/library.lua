@@ -10,6 +10,18 @@ function Library:Extract()
            self.Client
 end
 
+function Library:Patch(Module)
+    -- Check that the module is a table
+    if type(Module) ~= 'table' then
+        error('Library:Patch() must be called with a table!')
+    else
+        -- Copy all values from the module
+        for Key, Value in Module do
+            self[Key] = Value
+        end
+    end
+end
+
 -- Import the library
 <include "src/lib/player.lua">
 <include "src/lib/players.lua">

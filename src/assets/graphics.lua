@@ -1,100 +1,92 @@
-Assets.Scripts = {}
+Assets.Graphics = {}
 
-function Assets.Scripts:Initialize(Folder)
-    self.Folder = {}
+function Assets.Graphics:Initialize(Folder)
+    self.Folder = Folder
 
     -- Process Folder
-    for i, Script in Folder:GetChildren() do
-        if self[Script.Name] then
-            warn('Duplicate name in class with ' .. Script.Name)
+    for i, Gui in Folder:GetChildren() do
+        if self[Gui.Name] then
+            warn('Duplicate name in class with ' .. Gui.Name)
             continue
         end
 
         -- Create new instances of Class
-        self[Script.Name] = self:CreateScript(Script)
+        self[Gui.Name] = self:CreateGui(Gui)
     end
 
     Folder:Destroy()
     return self
 end
 
-function Assets.Scripts:CreateScript(Script)
-    return Scripts.new(Script)
+function Assets.Graphics:CreateGui(Gui)
+    return Graphics.new(Gui)
 end
 
--- Scripts Object
-local Scripts = {}
+-- Graphics Object
+local Graphics = {}
 
-function Scripts.new(Script)
+function Graphics.new(Gui)
     -- Copy all values to create a new instance of the class
-    local self = {}
+	local self = {}
 
-    for Key, Value in pairs(Scripts) do
+    for Key, Value in pairs(Graphics) do
         self[Key] = Value
     end
 
     -- Setup references
-    self:Set(Script)
+    self:Set(Gui)
     self.References = {}
     self.Connections = {}
 
     -- Destroy GUIs on removing
     AI.Cleanup:Connect(function()
-        self:Remove()
+        self:Hide()
     end)
 
     return self
 end
 
-function Scripts:Get()
+function Graphics:Get()
     return self.Prop
 end
 
-function Scripts:Set(Script)
+function Graphics:Set(Gui)
     -- Hide prop from workspace
-    self.Prop = HideProp(Script)
+    self.Prop = HideProp(Gui)
     return self:Get()
 end
 
-function Scripts:Activate()
-    -- Activate Script until removed
+function Graphics:Display()
+    -- Display GUI until hidden
     table.insert(
         self.Connections,
         Players.PlayerAdded:Connect(function(Player)
             Player.CharacterAdded:Connect(function()
-                self:GiveTo(Player)
+                self:ShowTo(Player)
             end)
         end)
     )
 
-    self:Give()
+    self:Show()
 end
 
-function Scripts:Give()
-    -- Give Script to all players once
+function Graphics:Show()
+    -- Show GUI to all players once
     for i, Player in Players:GetPlayers() do
-        self:GiveTo(Player)
+        self:ShowTo(Player)
     end
 end
 
-function Scripts:GiveTo(Player)
+function Graphics:ShowTo(Player)
     -- Show GUI to a single player once
-    self:Enable(Player.Character)
-end
-
-function Scripts:Enable(Parent)
     local Prop = self.Prop:Clone()
-    MoveProp(Prop, Parent)
-
-    if not Prop.Enabled then
-        Prop.Enabled = true
-    end
+    MoveProp(Prop, Player.PlayerGui)
 
     -- Create a reference
     table.insert(References, Prop)
 end
 
-function Scripts:Remove()
+function Graphics:Hide()
     -- Remove all GUIs
     for i, Prop in self.References do
         Prop:Destroy()

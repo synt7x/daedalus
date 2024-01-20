@@ -53,7 +53,8 @@ function Library.Raycasting:ReflectCast(Origin, Direction, Scalar, Parameters)
     local RPart, RPosition, RNormal = self:Raycast(Position, Direction, Scalar, Parameters)
     if not RPart then return { Part, Position, Normal } end
 
-    return { Part, Position, Normal }, { RPart, RPosition, RNormal }
+    return { Part = Part, Position = Position, Normal = Normal },
+           { Part = RPart, Position = RPosition, Normal = RNormal }
 end
 
 function Library.Raycasting:HitScan(Origin, Direction, Scalar, Parameters)
@@ -61,8 +62,10 @@ function Library.Raycasting:HitScan(Origin, Direction, Scalar, Parameters)
     if not Part then return end
 
     local Model = Part:FindFirstAncestorOfClass('Model')
-    if Model and Library.Players:GetTarget(Model) then
-        return Part, Position, Normal
+    local Target = Library.Players:GetTarget(Model)
+
+    if Model and Target then
+        return Part, Position, Normal, Target
     end
 end
 
@@ -71,8 +74,16 @@ function Library.Raycasting:PierceScan(Origin, Direction, Scalar, Parameters)
     local Part, Position, Normal
 
     repeat
-        Part, Position, Normal = self:HitScan(Origin, Direction, Scalar, Parameters)
-        if Part then table.insert(Hits, { Part, Position, Normal }) end
+        Part, Position, Normal, Target = self:HitScan(Origin, Direction, Scalar, Parameters)
+
+        if Part then
+            table.insert(Hits, {
+                Part = Part,
+                Position = Position,
+                Normal = Normal,
+                Target = Target
+            })
+        end
 
         Origin = Position + Direction * 2
     until not Part
