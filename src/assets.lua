@@ -40,3 +40,4 @@ end
 <include 'src/assets/graphics.lua'>
 <include 'src/assets/scripts.lua'>
 <include 'src/assets/sounds.lua'>
+<include 'src/assets/storage.lua'>

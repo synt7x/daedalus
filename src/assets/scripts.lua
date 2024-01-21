@@ -1,7 +1,7 @@
 Assets.Scripts = {}
 
 function Assets.Scripts:Initialize(Folder)
-    self.Folder = {}
+    self.Folder = Folder
 
     -- Process Folder
     for i, Script in Folder:GetChildren() do
@@ -14,7 +14,7 @@ function Assets.Scripts:Initialize(Folder)
         self[Script.Name] = self:CreateScript(Script)
     end
 
-    Folder:Destroy()
+    self.Folder:Destroy()
     return self
 end
 

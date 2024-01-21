@@ -14,7 +14,7 @@ function Assets.Graphics:Initialize(Folder)
         self[Gui.Name] = self:CreateGui(Gui)
     end
 
-    Folder:Destroy()
+    self.Folder:Destroy()
     return self
 end
 
