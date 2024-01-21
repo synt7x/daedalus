@@ -71,7 +71,7 @@ end
 
 function Library.Raycasting:PierceScan(Origin, Direction, Scalar, Parameters)
     local Hits = {}
-    local Part, Position, Normal
+    local Part, Position, Normal, Target
 
     repeat
         Part, Position, Normal, Target = self:HitScan(Origin, Direction, Scalar, Parameters)

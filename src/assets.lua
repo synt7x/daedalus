@@ -1,3 +1,5 @@
+local Assets = {}
+
 function Assets.new()
     -- Copy all values to create a new instance of the class
 	local self = {}

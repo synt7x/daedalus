@@ -1,27 +1,5 @@
 Assets.Graphics = {}
 
-function Assets.Graphics:Initialize(Folder)
-    self.Folder = Folder
-
-    -- Process Folder
-    for i, Gui in Folder:GetChildren() do
-        if self[Gui.Name] then
-            warn('Duplicate name in class with ' .. Gui.Name)
-            continue
-        end
-
-        -- Create new instances of Class
-        self[Gui.Name] = self:CreateGui(Gui)
-    end
-
-    self.Folder:Destroy()
-    return self
-end
-
-function Assets.Graphics:CreateGui(Gui)
-    return Graphics.new(Gui)
-end
-
 -- Graphics Object
 local Graphics = {}
 
@@ -83,7 +61,7 @@ function Graphics:ShowTo(Player)
     MoveProp(Prop, Player.PlayerGui)
 
     -- Create a reference
-    table.insert(References, Prop)
+    table.insert(self.References, Prop)
 end
 
 function Graphics:Hide()
@@ -96,4 +74,27 @@ function Graphics:Hide()
     for i, Connection in self.Connections do
         Connection:Disconnect()
     end
+end
+
+function Assets.Graphics:Initialize(Folder)
+    if not Folder then return end
+    self.Folder = Folder
+
+    -- Process Folder
+    for i, Gui in Folder:GetChildren() do
+        if self[Gui.Name] then
+            warn('Duplicate name in class with ' .. Gui.Name)
+            continue
+        end
+
+        -- Create new instances of Class
+        self[Gui.Name] = self:CreateGui(Gui)
+    end
+
+    self.Folder:Destroy()
+    return self
+end
+
+function Assets.Graphics:CreateGui(Gui)
+    return Graphics.new(Gui)
 end

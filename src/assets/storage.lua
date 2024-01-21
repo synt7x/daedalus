@@ -1,6 +1,7 @@
 Assets.Storage = {}
 
 function Assets.Storage:Initialize(Folder)
+    if not Folder then return end
     self.Folder = Folder
 
     -- Process Folder
@@ -39,7 +40,7 @@ function Assets.Storage:CreateObject(Object)
             return MoveProp(Object:Clone(), Parent)
         end,
         Cleanup = function(Object)
-            for i, Reference in References do
+            for i, Reference in Object.References do
                 Reference:Destroy()
             end
         end

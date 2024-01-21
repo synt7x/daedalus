@@ -24,7 +24,7 @@ if workspace:FindFirstChild('bots') then
     local Props = Library.Round.Props
     Props.Type = ReplicatedStorage:WaitForChild('curroundtype')
     Props.Disaster = ServerScriptService:WaitForChild('DisasterScript')
-    Props.Time = Props.disaster:WaitForChild('props'):WaitForChild('RoundTime')
+    Props.Time = Props.Disaster:WaitForChild('prop'):WaitForChild('RoundTime')
 
 
     -- Check if the round is active, this is called in all helper functions

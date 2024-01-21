@@ -28,7 +28,7 @@ function Library.Players:GetTarget(Model)
 end
 
 function Library.Players:GetNearest()
-    return Library.Players:GetNearestTo()
+    return Library.Players:GetNearestTo(AI:Position())
 end
 
 function Library.Players:GetNearestTo(Position)
@@ -38,7 +38,7 @@ function Library.Players:GetNearestTo(Position)
     for i, Target in self.Targets do
         if not Target:IsAlive() then continue end
 
-        local TargetPosition = Target.HumanoidRootPart
+        local TargetPosition = Target.HumanoidRootPart.Position
         local TargetDistance = (Position - TargetPosition).Magnitude
 
         if TargetDistance < Distance then

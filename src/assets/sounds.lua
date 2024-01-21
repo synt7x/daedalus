@@ -1,27 +1,5 @@
 Assets.Sounds = {}
 
-function Assets.Sounds:Initialize(Folder)
-    self.Folder = Folder
-
-    -- Process Folder
-    for i, Sound in Folder:GetChildren() do
-        if self[Sound.Name] then
-            warn('Duplicate name in class with ' .. Sound.Name)
-            continue
-        end
-
-        -- Create new instances of Class
-        self[Sound.Name] = self:CreateSound(Sound)
-    end
-
-    self.Folder:Destroy()
-    return self
-end
-
-function Assets.Sounds:CreateSound(Sound)
-    return Sounds.new(Sound)
-end
-
 -- Scripts Object
 local Sounds = {}
 
@@ -99,4 +77,27 @@ function Sounds:Sync()
     end
 
     return self
+end
+
+function Assets.Sounds:Initialize(Folder)
+    if not Folder then return end
+    self.Folder = Folder
+
+    -- Process Folder
+    for i, Sound in Folder:GetChildren() do
+        if self[Sound.Name] then
+            warn('Duplicate name in class with ' .. Sound.Name)
+            continue
+        end
+
+        -- Create new instances of Class
+        self[Sound.Name] = self:CreateSound(Sound)
+    end
+
+    self.Folder:Destroy()
+    return self
+end
+
+function Assets.Sounds:CreateSound(Sound)
+    return Sounds.new(Sound)
 end

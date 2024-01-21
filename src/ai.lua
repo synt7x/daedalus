@@ -17,6 +17,8 @@ function AI.new()
     self.MoveID = 0
     self.Flags = 0
 
+    Model.PrimaryPart:SetNetworkOwner()
+
     self:CreateEvent('Initialize')
     self:CreateEvent('Tick')
     self:CreateEvent('Cleanup')
@@ -92,7 +94,7 @@ function AI:MoveTo(Vector, Cutoff)
 
     task.delay(Cutoff, function()
         if ID == self:GetID() then
-            self:Move(AI:LookVector, -2)
+            self:Move(AI:LookVector(), -2)
         end
     end)
 
@@ -122,19 +124,19 @@ end
 -- Stop all movement
 function AI:Stop()
     self:IncrementID()
-    return Humanoid:MoveTo(self:Position())
+    return self.Humanoid:MoveTo(self:Position())
 end
 
 -- Increment MovementID
 function AI:IncrementID()
-    self.MovementID += 1
+    self.MoveID += 1
 
     return self:GetID()
 end
 
 -- Get MovementID
 function AI:GetID()
-    return self.MovementID
+    return self.MoveID
 end
 
 -- Create an event

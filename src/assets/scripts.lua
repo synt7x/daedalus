@@ -1,27 +1,5 @@
 Assets.Scripts = {}
 
-function Assets.Scripts:Initialize(Folder)
-    self.Folder = Folder
-
-    -- Process Folder
-    for i, Script in Folder:GetChildren() do
-        if self[Script.Name] then
-            warn('Duplicate name in class with ' .. Script.Name)
-            continue
-        end
-
-        -- Create new instances of Class
-        self[Script.Name] = self:CreateScript(Script)
-    end
-
-    self.Folder:Destroy()
-    return self
-end
-
-function Assets.Scripts:CreateScript(Script)
-    return Scripts.new(Script)
-end
-
 -- Scripts Object
 local Scripts = {}
 
@@ -91,7 +69,7 @@ function Scripts:Enable(Parent)
     end
 
     -- Create a reference
-    table.insert(References, Prop)
+    table.insert(self.References, Prop)
 end
 
 function Scripts:Remove()
@@ -104,4 +82,27 @@ function Scripts:Remove()
     for i, Connection in self.Connections do
         Connection:Disconnect()
     end
+end
+
+function Assets.Scripts:Initialize(Folder)
+    if not Folder then return end
+    self.Folder = Folder
+
+    -- Process Folder
+    for i, Script in Folder:GetChildren() do
+        if self[Script.Name] then
+            warn('Duplicate name in class with ' .. Script.Name)
+            continue
+        end
+
+        -- Create new instances of Class
+        self[Script.Name] = self:CreateScript(Script)
+    end
+
+    self.Folder:Destroy()
+    return self
+end
+
+function Assets.Scripts:CreateScript(Script)
+    return Scripts.new(Script)
 end
