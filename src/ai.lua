@@ -13,6 +13,10 @@ function AI.new()
     self.Humanoid = self.Model:FindFirstChildOfClass('Humanoid')
     self.Events = {}
 
+    -- Movement State
+    self.MoveID = 0
+    self.Flags = 0
+
     self:CreateEvent('Initialize')
     self:CreateEvent('Tick')
     self:CreateEvent('Cleanup')
@@ -30,11 +34,8 @@ function AI.new()
     -- Initialize asynchronous, blocking loop
     task.spawn(function()
         while self.Model do
-            -- Fetch all targets
-            local Targets = Library.Players.Targets
-
-            -- Fire the 'Tick' event, and pass targets
-            self.Tick:Fire(Targets)
+            -- Fire the 'Tick' event
+            self.Tick:Fire()
             task.wait()
         end
     end)
@@ -49,13 +50,91 @@ function AI.new()
 
     -- Cleanup on deletion
     self.Model.AncestryChanged:Connect(function()
-        if not ROOT:IsDescendantOf(workspace) then
+        if not SCOPE:IsDescendantOf(workspace) then
             self.Cleanup:Fire()
             script.Disabled = true
         end
     end)
 
 	return self
+end
+
+-- Get AI Position
+function AI:Position()
+    return self:CFrame().Position
+end
+
+function AI:CFrame()
+    return ROOT.CFrame
+end
+
+-- Teleport AI
+function AI:TeleportTo(Vector)
+    ROOT.CFrame = CFrame.new(Vector) * self:CFrame() - self:Position()
+end
+
+function AI:GoTo(Coordinate)
+    ROOT.CFrame = Coordinate
+end
+
+-- Get AI LookDirection
+function AI:LookVector()
+    return self:CFrame().LookVector
+end
+
+-- Replacement MoveTo function
+function AI:MoveTo(Vector, Cutoff)
+    if not self.Humanoid then return warn('No result of MoveTo due to lack of Humanoid') end
+
+    local ID = self:IncrementID()
+    local Humanoid = self.Humanoid
+    local Cutoff = Cutoff or 3 / 4
+
+    task.delay(Cutoff, function()
+        if ID == self:GetID() then
+            self:Move(AI:LookVector, -2)
+        end
+    end)
+
+    Humanoid:MoveTo(Vector)
+end
+
+-- Replacement Move function
+function AI:Move(Direction, Distance)
+    if not self.Humanoid then return warn('No result of Move due to lack of Humanoid') end
+
+    local ID = self:IncrementID()
+    local Humanoid = self.Humanoid
+
+    if Distance then
+        local Delay = math.abs(Distance) / Humanoid.WalkSpeed
+
+        task.delay(Delay, function()
+            if ID == self:GetID() then
+                self:Stop()
+            end
+        end)
+    end
+
+    Humanoid:Move(Direction * math.sign(Distance))
+end
+
+-- Stop all movement
+function AI:Stop()
+    self:IncrementID()
+    return Humanoid:MoveTo(self:Position())
+end
+
+-- Increment MovementID
+function AI:IncrementID()
+    self.MovementID += 1
+
+    return self:GetID()
+end
+
+-- Get MovementID
+function AI:GetID()
+    return self.MovementID
 end
 
 -- Create an event

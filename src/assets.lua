@@ -6,7 +6,7 @@ function Assets.new()
         self[Key] = Value
     end
 
-    self.Root = ROOT
+    self.Root = SCOPE
 
     -- Get folders
     local SoundsFolder = self.Root:FindFirstChild('Sounds')

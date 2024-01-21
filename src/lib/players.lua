@@ -27,6 +27,10 @@ function Library.Players:GetTarget(Model)
     return self:IsTarget(Model) or nil
 end
 
+function Library.Players:GetNearest()
+    return Library.Players:GetNearestTo()
+end
+
 function Library.Players:GetNearestTo(Position)
     local Distance = math.huge
     local Nearest = nil

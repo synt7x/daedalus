@@ -23,8 +23,9 @@ function Library:Patch(Module)
 end
 
 -- Import the library
-<include "src/lib/player.lua">
-<include "src/lib/players.lua">
-<include "src/lib/round.lua">
-<include "src/lib/animate.lua">
-<include "src/lib/raycast.lua">
+<include 'src/lib/player.lua'>
+<include 'src/lib/players.lua'>
+<include 'src/lib/round.lua'>
+<include 'src/lib/animate.lua'>
+<include 'src/lib/raycast.lua'>
+<include 'src/lib/pathfinding.lua'>

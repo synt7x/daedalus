@@ -4,9 +4,12 @@ local function Validate(Model, Type)
         return Model
     end
 
+    if not Model then
+        error('Expected type ' .. Type .. ' but got nothing.')
+    end
+
     -- If the model is not the correct type, return nil
     error('Expected type ' .. Type .. ' but got ' .. Model.ClassName .. ' instead.')
-    return nil
 end
 
 local function CreateProp(Type, Name, Parent)

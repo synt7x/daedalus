@@ -14,7 +14,7 @@ function Library.Animate:LoadAnimations(Animations)
     self.Pose = 'Idle'
 
     AI.Humanoid.Running:Connect(function(Speed)
-        if Speed <= 0.01 then
+        if Speed <= 1 / 100 then
             self.Pose = 'Idle'
         else
             self.Pose = 'Running'

@@ -13,6 +13,7 @@ local PROPS   = {}
 
 -- References
 local MODEL   = nil
+local SCOPE   = nil
 local ROOT    = nil
 
 -- Services
@@ -41,21 +42,23 @@ local Library = {
     Hitbox = {},
 }
 
-<include "src/utils/props.lua">
-<include "src/utils/logs.lua">
+<include 'src/utils/props.lua'>
+<include 'src/utils/logs.lua'>
 
-<include "src/assets.lua">
-<include "src/library.lua">
-<include "src/ai.lua">
+<include 'src/assets.lua'>
+<include 'src/library.lua'>
+<include 'src/ai.lua'>
 
 -- Entrypoint
-local function Main(Model, Root, Options)
+local function Main(Model, Root, Scope, Options)
     -- Pass parameters to global scope
     OPTIONS = Options or {}
     MODEL = Validate(Model, 'Model')
-    ROOT = Root or script.Parent
+    ROOT = Model:FindFirstChild('HumanoidRootPart') or Model:FindFirstChild('Handle') or Validate(Root, 'BasePart')
+    SCOPE = Scope or script.Parent
 
     if not MODEL then return end
+    if not ROOT then return end
 
     -- Store classes into global scope
     PROPS = {
@@ -66,6 +69,11 @@ local function Main(Model, Root, Options)
 
     -- Propagate new class
     AI = PROPS.AI
+
+    -- Activate parallel execution
+    if SCOPE:FindFirstAncestorOfClass('Actor') then
+        task.desyncronize()
+    end
 
     -- Hide from workspace
     if script:IsDescendantOf(workspace) then
