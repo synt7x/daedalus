@@ -1,3 +1,5 @@
+# Requires CLAMP to compile Lua files
+
 release/daedalus.lua:
 	bin/clamp main.lua -o release/daedalus.lua
 
