@@ -1,6 +1,4 @@
--- Version 2.0.0-INDEV-0.0.0
--- Update date: 1/20/2024
--- Author(s): synt7x
+-- Version 2.0.0
 
 -- Management
 local NAME    = 'daedalus'
