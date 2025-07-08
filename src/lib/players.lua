@@ -3,15 +3,19 @@ Library.Players = {
     Bots = workspace:FindFirstChild('bots')
 }
 
+-- Create a new player object
 function Library.Players:RegisterCharacter(Character)
     self.Targets[Character] = Library.Player.new(Character)
     return self.Targets[Character]
 end
 
+-- Get all targets, which are players or bots that are alive
 function Library.Players:GetTargets()
     return self.Targets
 end
 
+-- Check if a specific `Model` is a target,
+-- returns the target if it is, otherwise returns false
 function Library.Players:IsTarget(Model)
     for i, Target in self.Targets do
         if not Target:IsAlive() then continue end
@@ -23,14 +27,17 @@ function Library.Players:IsTarget(Model)
     return false
 end
 
+-- Get a specific target by its `Model`
 function Library.Players:GetTarget(Model)
     return self:IsTarget(Model) or nil
 end
 
+-- Get the nearest target to the AI's position
 function Library.Players:GetNearest()
     return Library.Players:GetNearestTo(AI:Position())
 end
 
+-- Get the nearest target to a specific `Vector3` position
 function Library.Players:GetNearestTo(Position)
     local Distance = math.huge
     local Nearest = nil
@@ -50,6 +57,8 @@ function Library.Players:GetNearestTo(Position)
     return Nearest, Distance
 end
 
+-- Get all players in the game,
+-- including bots if they are enabled
 function Library.Players:GetPlayers()
     local List = {}
 
@@ -66,12 +75,15 @@ function Library.Players:GetPlayers()
     return List
 end
 
+-- Unwrap a user object to get the player object
 function Library.Players:Unwrap(User)
     if User.Humanoid then
         return User.Player
     end
 end
 
+-- General module initialization,
+-- not to be called directly.
 function Library.Players:Initialize()
     Players.PlayerAdded:Connect(function(Player)
         Player.CharacterAdded:Connect(function(Character)

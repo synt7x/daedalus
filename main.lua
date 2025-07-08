@@ -1,4 +1,4 @@
--- Version 2.0.0
+"strict" -- Version 2.0.0
 
 -- Management
 local NAME    = 'daedalus'
@@ -16,17 +16,16 @@ local ROOT    = nil
 
 -- Services
 local Players = game:GetService('Players')
-local StarterPlayer = game:GetService('StarterPlayer')
 local StarterGui = game:GetService('StarterGui')
+local StarterPlayer = game:GetService('StarterPlayer')
+local PathfindingService = game:GetService('PathfindingService')
 local StarterPlayerScripts = StarterPlayer.StarterPlayerScripts
 local StarterCharacterScripts = StarterPlayer.StarterCharacterScripts
 local ReplicatedStorage = game:GetService('ReplicatedStorage')
 local ServerScriptService = game:GetService('ServerScriptService')
 
--- daedalus v2.0.0 (https://github.com/synt7x/daedalus)
--- Precompiled using clamp and LuaNext, optimized manually
--- Request github access: synt7x
-
+-- Remote used for debugging purposes,
+-- you should NOT create it youself unless you know what you're doing!
 local Remote = ReplicatedStorage:FindFirstChild('daedalus')
 
 -- Initialize Classes
@@ -47,7 +46,9 @@ local Library = {
 <include 'src/library.lua'>
 <include 'src/ai.lua'>
 
--- Entrypoint
+-- Create a new AI instance,
+-- takes a `Model` instance, `Root` part, `Scope` instance (generally the script's parent).
+-- Returns the `AI` library, `Assets` library, and `Library` library in the form `local AI, Assets, Library = Framework()`.
 local function Main(Model, Root, Scope, Options)
     -- Pass parameters to global scope
     OPTIONS = Options or {}

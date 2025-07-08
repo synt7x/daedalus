@@ -17,7 +17,7 @@ function AI.new()
     self.MoveID = 0
     self.Flags = 0
 
-    Model.PrimaryPart:SetNetworkOwner()
+    self.Model.PrimaryPart:SetNetworkOwner()
 
     self:CreateEvent('Initialize')
     self:CreateEvent('Tick')
@@ -139,8 +139,23 @@ function AI:GetID()
     return self.MoveID
 end
 
--- Create an event
-function AI:CreateEvent(Event: string)
+-- Check if current movement is optimized,
+-- takes a list of `Waypoints` as an argument.
+function AI:Unoptimized(Target, Waypoints)
+    local Alternate = Library.Players:GetNearest()
+    local Waypoints = self.Waypoints
+
+    return not Alternate
+        or #Waypoints == 0
+        or Alternate.Character ~= Target.Character
+        or Alternate:DistanceTo(Target:Position()) < Target:DistanceTo(Waypoints[#Waypoints].Position)
+        or self.Raycast
+end
+
+-- Create an event with an `Event` name
+-- This will create an event that can be connected to
+-- and fired, with the `Connect` and `Fire` methods.
+function AI:CreateEvent(Event)
     -- Don't overwrite existing values
     if self.Events[Event] or self[Event] then
         error('Event "' .. Event .. '" already exists!')
@@ -167,7 +182,7 @@ function AI:CreateEvent(Event: string)
     return self[Event]
 end
 
--- Bind to the main event loop
+-- Bind a `Callback` to the main event loop
 function AI:Bind(Callback)
     -- Check that the 'Tick' event exists
     if not self.Events.Tick then
@@ -189,4 +204,73 @@ function AI:Patch(Module)
             self[Key] = Value
         end
     end
+end
+
+-- Quickly create an AI instance
+-- This is a convenience function to create an AI instance
+-- Takes a function argument `Pathfinding` which handles pathfinding
+-- along waypoints, with the type `(Target, Waypoint) -> !`.
+-- Also takes a function argument `Raycasting` which handles
+-- pathfinding along a straight line, with the type `(Target) -> !`.
+function AI:API(Pathfinding, Raycasting)
+    -- Handle targeting
+    self:Targeting()
+
+    -- Handle pathfinding
+    self:Connect(function()
+        if not self.Humanoid then return warn('AI is halted due to lack of Humanoid') end
+
+        -- Get generated values
+        local Target = self.Target
+        local Raycast = self.Raycast
+        local Waypoints = self.Waypoints
+
+        -- Skip if there is no target
+        if not Target then return AI:Stop() end
+
+        if Raycast then
+            if Raycasting(Target) then return end
+        else
+            for i, Waypoint in Waypoints do
+                -- Skip unneccessary waypoints
+                if i <= 2 then continue end
+                if Pathfinding(Target, Waypoint) then return end
+                if self:Unoptimized(Target, Waypoints) then return end
+            end
+        end
+    end)
+end
+
+-- Have the AI handle targeting for you.
+function AI:Targeting()
+    -- Generate raycasting parameters
+    Library.Raycasting:GetParameters(AI.Model)
+
+    -- Generate pathfinding information
+    self:Connect(function()
+        if not self.Humanoid then return warn('Targeting is halted due to lack of Humanoid') end
+
+        -- Get the current `Target` player
+        local Target = Library.Players:GetNearest()
+
+        -- Expose the target to the AI and reset the Raycast
+        self.Target = Target
+        self.Raycast = nil
+
+        -- Don't continue if there is no target
+        if not Target then return end
+
+        -- Check if the target is visible
+        local Raycast = Library.Raycasting:PlayerCast(
+            self:Position(),
+            Target:Position(),
+            OPTIONS.MaxDistance or 1024,
+            Library.Raycasting.
+            Library.Raycasting.Parameters.Default
+        )
+
+        -- Update the Raycasting information
+        self.Raycast = Raycast
+        self.Waypoints = Library.Pathfinding:Calculate(Target:Position())
+    end)
 end
